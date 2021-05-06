@@ -1,0 +1,54 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+
+{% load i18n %}
+{% load account %}
+
+{% block auth %}
+
+<main class="mt-5 pt-4">
+    <div class="container wow fadeIn card">
+
+      <!-- Heading -->
+      <h2 class="my-5 h2 text-center" style="font-family: 'Libre Baskerville', serif;">Confirm Email</h2>
+
+      <!--Grid row-->
+      <div class="row justify-content-center">
+
+        <!--Grid column-->
+        <div class="col-md-6">
+          {% if confirmation %}
+          {% user_display confirmation.email_address.user as user_display %}
+              <p class="card-text">{% blocktrans with confirmation.email_address.email as email %} Please confirm that 
+                <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user <strong>"{{ user_display }}"</strong>.{% endblocktrans %}</p>
+
+        <form method="POST" action="{% url 'account_confirm_email' confirmation.key %}" enctype="multipart/form-data" style="padding-bottom: 50px;">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+
+            <button type="submit" class="btn btn-primary">Confirm</button>
+        </form>
+        {% else %}
+        
+        {% url 'account_email' as email_url %}
+        
+            <p>{% blocktrans %}This e-mail confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktrans %}</p>
+        
+        {% endif %}
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+    </div>
+  </main>
+
+    
+{% endblock auth %}
+    

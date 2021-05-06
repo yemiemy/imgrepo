@@ -1,0 +1,173 @@
+{% extends 'core/index.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <div class="container-fluid tm-container-content tm-mt-60">
+        <div class="row mb-4">
+            <h2 class="col-12 tm-text-primary">{{object.name}}</h2>
+        </div>
+        <div class="row tm-mb-90">            
+            <div class="col-xl-8 col-lg-7 col-md-6 col-sm-12">
+                {% if object.image %}
+                <img src="{{object.image.url}}" alt="Image" class="img-fluid">
+                {% endif %}
+            </div>
+            <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
+                <div class="tm-bg-gray tm-video-details">
+                    <p class="mb-4">
+                        {{object.description}}
+                    </p>
+                    <!-- <p class="lead">
+                        Price: 
+                        {% if object.discount_price %}
+                          <span class="mr-1">
+                            <del>${{object.price}}</del>
+                          </span>
+                          <span>${{object.discount_price}}</span>
+                        {% else %}
+                          <span>${{object.price}}</span>
+                        {% endif %}
+                      </p> -->
+                    <div class="mb-5">
+                        <!-- <a href="{% url 'core:payment' %}" class="btn btn-primary tm-btn-big">Pay</a> -->
+                        
+                        <form class="form-inline" action="{{object.get_add_to_cart_url}}" method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <p style="font-weight: 700;">License Type
+                                    <br>
+                                    <input type="radio" id="radio" checked>
+                                    <label for="radio" style="font-weight: 100;">Multi-purpose
+                                    {% if object.discount_price %}
+                                    <span class="mr-1 text-left" style="font-weight: 700;">
+                                        <del>${{object.price}}</del>
+                                    </span>
+                                    <span class="text-left" style="font-weight: 700;">${{object.discount_price}}</span>
+                                    {% else %}
+                                    <span class="text-left" style="font-weight: 700;">${{object.price}}</span>
+                                    {% endif %}
+                                    </label>
+                                </p>
+                                    
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" value="1" min="1" class="form-control mb-2 mr-sm-2" id="inlineFormInputName2" placeholder="QTY" name="qty">
+                                </div>
+                            </div>
+                            <!-- <div class="row">
+                                <div class="col-md-9">
+                                    <input type="radio" id="radio" checked>
+                                    <label for="radio">Multi-purpose</label>
+                                </div>
+                                <div class="col-md-3 text-left">
+                                    {% if object.discount_price %}
+                                    <span class="mr-1 text-left">
+                                        <del>${{object.price}}</del>
+                                    </span>
+                                    <span class="text-left">${{object.discount_price}}</span>
+                                    {% else %}
+                                    <span class="text-left">${{object.price}}</span>
+                                    {% endif %}
+                                </div>
+                            </div> -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block mb-2">Add to Cart</button>
+                                </div>
+                            </div>
+                          </form>
+                          <form action="{% url 'core:payment' %}" method="GET">
+                            <div class="row">
+                              <div class="col-md-12">
+                                {% if object.discount_price %}
+                                <input type="hidden" value="{{object.discount_price}}" name="price">
+                                {% else %}
+                                <input type="hidden" value="{{object.price}}" name="price">
+                                {% endif %}
+                                <input type="hidden" value="{{object.slug}}" name="slug">
+                                  <button type="submit" class="btn btn-secondary btn-lg btn-block mb-2">Buy Now</button>
+                              </div>
+                            </div> 
+                          </form> 
+
+                          <!-- <form class="form-inline" action="{{object.get_add_to_cart_url}}" method="POST">
+                            {% csrf_token %}
+                            <p for="license">License Type</p>
+                            <input type="radio" id="radio" checked>
+                            <label for="radio">Multi-purpose</label>
+                            <input type="number" value="1" min="1" class="form-control mb-2 mr-sm-2" id="inlineFormInputName2" placeholder="QTY" name="qty">
+
+                            <button type="submit" class="btn btn-primary mb-2">Add to Cart</button>
+                          </form>   -->
+                    </div>   
+                                 
+                    <div class="mb-4 d-flex flex-wrap">
+                        <div class="mr-4 mb-2">
+                            <span class="tm-text-gray-dark">Dimension: </span><span class="tm-text-primary">{{object.dimension}}</span>
+                        </div>
+                        <div class="mr-4 mb-2">
+                            <span class="tm-text-gray-dark">Format: </span><span class="tm-text-primary">{{object.format}}</span>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <h3 class="tm-text-gray-dark mb-3">Author: </h3>
+                        <img src="{{object.user.profile.image.url}}" class="img-responsive rounded" width="100px" height="100px" alt="Author Image">
+                        <br>
+                        <a href="{% url 'core:user_item' object.user.id object.user.first_name %}">{{ object.user.first_name | capfirst }}</a>
+                    </div>
+                    <div>
+                        <h3 class="tm-text-gray-dark mb-3">Tags</h3>
+                        {% for tag in categories %}
+                        <a href="{% url 'core:item_tag' tag.name %}" class="tm-text-primary mr-4 mb-2 d-inline-block">{{tag.name | capfirst}}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if rel_items or user_rel_items %}
+        <div class="row mb-4">
+            <h2 class="col-12 tm-text-primary">
+                Related Photos
+            </h2>
+        </div>
+        <div class="row mb-3 tm-gallery">
+            {% for item in rel_items %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5">
+                <figure class="effect-ming tm-video-item">
+                    {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="Image" class="img-fluid">
+                    {% endif %}
+                    <figcaption class="d-flex align-items-center justify-content-center">
+                        <h2>{{ item.name | truncatewords:1 }}</h2>
+                        <a href=" {{ object.get_absolute_url }} ">View more</a>
+                    </figcaption>                    
+                </figure>
+                <div class="d-flex justify-content-between tm-text-gray">
+                    <span class="tm-text-gray-light">{{item.date_added | naturalday}}</span>
+                    <span>{{ item.downloads }} downloads</span>
+                </div>
+            </div> 
+            {% endfor %}
+            {% for item in user_rel_items %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5">
+                <figure class="effect-ming tm-video-item">
+                    {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="Image" class="img-fluid">
+                    {% endif %}
+                    <figcaption class="d-flex align-items-center justify-content-center">
+                        <h2>{{ item.name | truncatewords:1 }}</h2>
+                        <a href=" {{ object.get_absolute_url }} ">View more</a>
+                    </figcaption>                    
+                </figure>
+                <div class="d-flex justify-content-between tm-text-gray">
+                    <span class="tm-text-gray-light">{{item.date_added | naturalday}}</span>
+                    <span>{{ item.downloads }} downloads</span>
+                </div>
+            </div> 
+            {% endfor %}       
+        </div> <!-- row -->
+        {% endif %}
+    
+    </div> <!-- container-fluid, tm-container-content -->
+{% endblock %}

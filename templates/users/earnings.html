@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+{% block earn %}
+active
+{% endblock earn %}
+{% block content %}
+    <main class="mt-5 pt-4">
+        <div class="container">
+            <div class="table-responsive">
+                <h2>Your Earnings</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Item name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Downloads</th>
+                            <th scope="col">Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{item.name}}</td>
+                            <td>
+                                {% if item.discount_price %}
+                                ${{ item.discount_price }}
+                                {% else %}
+                                {{item.price}}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{item.downloads}}
+                            </td>
+                            <td>
+                                {{item.get_earning}}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">Your photos have not been purchased yet.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <a class="btn btn-primary float-right" href="{% url 'users:dashboard' %}">View Dashboard</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% if total_earning %}
+                        <tr>
+                            <td colspan="4"><b>Total Earning</b></td>
+                            <td><b>${{ total_earning }}</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <form action="{% url 'users:dashboard' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="payout" value="{{ total_earning }}">
+                                    <button class="btn btn-warning float-right ml-2" style="margin:0;" type="submit">Request payout</button>
+                                </form>
+                                <a class="btn btn-primary float-right" href="{% url 'users:dashboard' %}">View Dashboard</a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+{% endblock content %}
+    

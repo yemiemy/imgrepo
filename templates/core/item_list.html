@@ -1,0 +1,75 @@
+{% extends 'core/index.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+  
+
+    <div class="container-fluid tm-container-content tm-mt-60">
+        <div class="row mb-4">
+            {% if view.kwargs.name %}
+            <h2 class="col-6 tm-text-primary" style="font-family: 'Libre Baskerville', serif;">
+                Photos under {{view.kwargs.name}} ({{page_obj.paginator.count}})
+            </h2>
+            {% elif view.kwargs.first_name %}
+            <h2 class="col-6 tm-text-primary" style="font-family: 'Libre Baskerville', serif;">
+                Photos by {{view.kwargs.first_name}} ({{page_obj.paginator.count}})
+            </h2>
+            {% if user.first_name == view.kwargs.first_name %}
+            <a href="{% url 'users:dashboard' %}">View Dashboard</a>
+            {% endif %}
+            {% endif %}
+            <div class="col-6 d-flex justify-content-end align-items-center">
+                {% if is_paginated %}
+                <form action="." class="tm-text-primary">
+                    Page <input type="text" value="1" size="1" pattern="[0-9]" name="page" class="tm-input-paging tm-text-primary"> of {{page_obj.paginator.num_pages}}
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row tm-mb-90 tm-gallery">
+            {% for object in object_list %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5">
+                <figure class="effect-ming tm-video-item" title="{{ object.name }}">
+                    {% if object.image %}
+                    <img src="{{ object.image.url }}" alt="{{ object.name }}" class="img-fluid">
+                    {% endif %}
+                    <figcaption class="d-flex align-items-center justify-content-center">
+                        <h2>{{ object.name | truncatewords:1 }}</h2>
+                        <a href="{{ object.get_absolute_url }}">View more</a>
+                    </figcaption>                    
+                </figure>
+                <div class="d-flex justify-content-between tm-text-gray">
+                    <span class="tm-text-gray-light">{{ object.date_added | naturalday }}</span>
+                    <span>{{object.downloads | intcomma}} downloads</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div> <!-- row -->
+        {% if is_paginated %}
+        <div class="row tm-mb-90">
+            <div class="col-12 d-flex justify-content-between align-items-center tm-paging-col">
+                {% if page_obj.has_previous %}
+                <a href="?page={{page_obj.previous_page_number}}" class="btn btn-primary tm-btn-prev mb-2">Previous</a>
+                {% else %}
+                <a href="javascript:void(0);" class="btn btn-primary tm-btn-prev mb-2 disabled">Previous</a>
+                {% endif %}
+                <div class="tm-paging d-flex">
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <a href="javascript:void(0);" class="active tm-paging-link">{{num}}</a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?page={{ num }}" class="tm-paging-link">{{num}}</a>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% if page_obj.has_next %}
+                <a href="?page={{page_obj.next_page_number}}" class="btn btn-primary tm-btn-next">Next Page</a>
+                {% else %}
+                <a href="javascript:void(0);" class="btn btn-primary tm-btn-prev mb-2 disabled">Next Page</a>
+                {% endif %}
+            </div>            
+        </div>
+        {% endif %}
+    </div> <!-- container-fluid, tm-container-content -->
+    {% endblock content %}

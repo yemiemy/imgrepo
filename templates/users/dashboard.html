@@ -1,0 +1,98 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <main class="mt-5 pt-4">
+        <div class="container">
+            <div class="table-responsive">
+                <h2>Order History</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Items</th>
+                            <th scope="col">Order Status</th>
+                            <th scope="col">Ordered Date</th>
+                            <th scope="col">Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{order.order_id}}</td>
+                            <td>
+                                <ul>
+                                    {% for order_item in order.items.all %}
+                                    <li>
+                                        {{order_item | capfirst}}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>
+                                {% if order.ordered %}
+                                Ordered
+                                {% else %}
+                                Still in cart
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{order.ordered_date}}
+                            </td>
+                            <td>
+                                {{order.get_total}}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">You have not processed any order.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <a class="btn btn-primary float-right" href="/">Continue Shopping</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <button type="button" class="btn btn-warning float-right ml-2" style="margin:0;" data-toggle="modal" data-target="#exampleModalCenter">Become a seller</button>
+                                <a class="btn btn-primary float-right" href="/">Continue Shopping</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Do more with your account.</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{% url 'users:become_a_seller' %}" method="POST">
+            {% csrf_token %}
+            <div class="modal-body">
+              <div class="form-group">
+                  {{form|crispy}}
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+    

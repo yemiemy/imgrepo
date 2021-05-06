@@ -1,0 +1,64 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% block content %}
+    <main class="mt-5 pt-4">
+        <div class="container">
+            <div class="table-responsive">
+                <h2>Your Photos</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Image name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Date Uploaded</th>
+                            <th scope="col">Downloads</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{item.name | capfirst}}</td>
+                            <td>
+                                {{item.description | truncatewords:15}}
+                            </td>
+                            <td>
+                                {{item.category.name | capfirst}}
+                            </td>
+                            <td>
+                                {{item.date_added}}
+                            </td>
+                            <td>
+                                {{item.downloads | intcomma}}
+                                <a href="{% url 'core:item_delete' item.id item.slug %}" class="text-danger">
+                                    <i class="fas fa-trash ml-2 float-right"></i>
+                                </a>
+                                <a href="{% url 'core:item_update' item.id item.slug %}" class="text-info">
+                                    <i class="fas fa-edit ml-2 float-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6">You have not uploaded any photo.</td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                        </tr>
+                        <tr>
+                            <td colspan="6">
+                                <a href="{% url 'core:item_create' %}" class="btn btn-warning float-right ml-2">Upload Photo</a>
+                                <a class="btn btn-primary float-right" href="{% url 'core:user_item' user.id user.first_name %}">View your page</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+{% endblock content %}
+    
