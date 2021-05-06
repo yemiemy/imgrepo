@@ -9,7 +9,6 @@ This project provides a platform for people to buy and sell their photo contents
 There are two levels of access:
 1. Buyer account
 2. Seller account
-====
 
 Users can decide on which of the two accounts they want to create at signup. They can also upgrade their accounts to a seller account later on.
 ---
@@ -24,7 +23,7 @@ Users can decide on which of the two accounts they want to create at signup. The
     * Go to their dashboard by pressing the "_Hi, User_" button on the navigation bar.
     * Then at the bottom right of the table of items on their dashboard, they can press a button that says "_Become a Seller_".
     * A modal form will pop up. After filling this form, they will be rediredted to their newly updated profile as a seller.
-==========
+
 ### Seller's Account
 + As sellers, users have the provilege of doing everything in the "_Buyer's Account_" as well as making purchase from other sellers on the platform. 
 + Sellers can upload new photos by following the steps below:
@@ -45,9 +44,8 @@ Users can decide on which of the two accounts they want to create at signup. The
 + Sellers can view their earnings based on how many of their images have been downloaded.
 + Sellers can make a request for their payouts. Payouts are made successful if they above a certain threshold of $100.
 
-====
+
 ## Cheers!
-===
 There you go. Sign up, decide which account is best for you and get the most out of the platform. Cheers!
 
 
