@@ -2,8 +2,8 @@ from django.db import models
 from django.conf import settings
 from django.shortcuts import reverse
 from django.utils.text import slugify
-from django_countries.fields import CountryField
-from PIL import Image
+# from django_countries.fields import CountryField
+# from PIL import Image
 
 # Create your models here.
 
@@ -66,7 +66,7 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def save(self, *args, **kwargs):
         value = self.name
         self.slug = slugify(value, allow_unicode=True)
@@ -78,35 +78,35 @@ class Item(models.Model):
         #     output_size = (420,236)
         #     img.thumbnail(output_size)
         #     img.save(self.image.path)
-    
+
     def get_absolute_url(self):
         return reverse('core:item-detail', kwargs={
             'slug': self.slug
             })
-    
+
     def get_add_to_cart_url(self):
         return reverse('core:add-to-cart', kwargs={
             'slug':self.slug
         })
-    
+
     def get_remove_from_cart_url(self):
         return reverse('core:remove-from-cart', kwargs={
             'slug':self.slug
-        }) 
+        })
     # This function gets the price based on the quantity
     def get_total_item_price(self):
         return self.downloads * self.price
-    
+
     # gets the total_price using discount_price
     def get_total_discount_item_price(self):
         return self.downloads * self.discount_price
-    
+
     # returns the price depending on either discounted or not.
     def get_earning(self):
         if self.discount_price:
             return self.get_total_discount_item_price()
         return self.get_total_item_price()
-        
+
 
 
 class OrderItem(models.Model):
@@ -118,18 +118,18 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} of {self.item.name}"
-    
+
     # This function gets the price based on the quantity
     def get_total_item_price(self):
         return self.quantity * self.item.price
-    
+
     # gets the total_price using discount_price
     def get_total_discount_item_price(self):
         return self.quantity * self.item.discount_price
-    
+
     def get_amount_saved(self):
         return self.get_total_item_price() - self.get_total_discount_item_price()
-    
+
     # returns the price depending on either discounted or not.
     def get_final_price(self):
         if self.item.discount_price:
@@ -149,7 +149,7 @@ class Order(models.Model):
 
     def __str__(self):
         return self.user.username
-    
+
     # returns the total price of all order_items in a cart
     def get_total(self):
         total = 0

@@ -1,25 +1,18 @@
 from django.db import models
-from django.contrib.auth import get_user_model
-from django.contrib import messages
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.utils.text import slugify
-from django.conf import settings
-from django.db.models.signals import pre_save
 # from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from PIL import Image
+# from PIL import Image
 from django.utils.html import strip_tags
 # from .utils import id_generator
-import string
-import random
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
 # User = settings.AUTH_USER_MODEL
-    
+
 
 class User(AbstractUser):
     seller = models.BooleanField(default=False)
@@ -46,23 +39,23 @@ class Profile(models.Model):
     facebook = models.CharField(max_length=150, blank=True, null=True)
     twitter = models.CharField(max_length=150, blank=True, null=True)
     instagram = models.CharField(max_length=50, blank=True, null=True)
-    
+
     # check if welcome email has been sent
     has_sent_welcome_email = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
-    def save(self, *args, **kwargs):
-        super(Profile, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     super(Profile, self).save(*args, **kwargs)
 
-        img = Image.open(self.image.path)
+        # img = Image.open(self.image.path)
 
-        if img.height > 300 or img.width > 300:
-            output_size = (300,300)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
-    
+        # if img.height > 300 or img.width > 300:
+        #     output_size = (300,300)
+        #     img.thumbnail(output_size)
+        #     img.save(self.image.path)
+
     """SENDING EMAIL TO NEW USERS"""
     def send_welcome_mail(self):
         print('Welcome message function!')
@@ -73,11 +66,11 @@ class Profile(models.Model):
         subject = 'Welcome!'
         message = render_to_string('emails/welcome_email.html', context)
         plain_body = strip_tags(message)
-        
+
         send_mail(
-            subject, 
-            plain_body, 
-            'learnwithtusby@gmail.com', 
+            subject,
+            plain_body,
+            'learnwithtusby@gmail.com',
             [self.user.email],
             html_message=message
             )
