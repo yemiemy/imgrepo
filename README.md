@@ -46,7 +46,7 @@ Users can decide on which of the two accounts they want to create at signup. The
 
 
 ## Cheers!
-You can visit the application at (ImgRepo)[http://rasholayemi.pythonanywhere.com/]
+You can visit the application at [ImgRepo](http://rasholayemi.pythonanywhere.com/)
 There you go. Sign up, decide which account is best for you and get the most out of the platform. Cheers!
 
 
